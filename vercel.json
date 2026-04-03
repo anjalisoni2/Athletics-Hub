@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "athletics_event_platform_backend/manage.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "athletics_event_platform_backend/manage.py"
+    }
+  ]
+}
