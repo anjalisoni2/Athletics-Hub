@@ -1,0 +1,12 @@
+<h1>Pending Events for Approval</h1>
+<ul>
+{% for event in events %}
+    <li>
+        {{ event.name }} ({{ event.category }}) - {{ event.location }}
+        <a href="{% url 'approve_event' event.id %}">Approve</a>
+        <a href="{% url 'reject_event' event.id %}">Reject</a>
+    </li>
+{% empty %}
+    <li>No pending events</li>
+{% endfor %}
+</ul>

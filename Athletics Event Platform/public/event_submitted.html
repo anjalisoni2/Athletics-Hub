@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Submitted</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { 
+      font-family: system-ui, sans-serif; 
+      background: #61ccbd; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100vh; 
+    }
+    .card { 
+      background: #fff; 
+      padding: 40px; 
+      border-radius: 16px; 
+      text-align: center; 
+      box-shadow: 0 12px 35px rgba(0,0,0,0.1); 
+      width: 400px;
+    }
+    h1 { 
+      color: #10b981; 
+      margin-bottom: 16px; 
+    }
+    p { 
+      color: #1f2933; 
+      font-size: 16px; 
+    }
+    .btn { 
+      margin-top: 20px; 
+      padding: 10px 24px; 
+      background: #2563eb; 
+      color: white; 
+      border: none; 
+      border-radius: 999px; 
+      cursor: pointer; 
+      text-decoration: none; 
+      font-size: 14px; 
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>✅ Event Submitted!</h1>
+    <p>Your event request has been sent successfully to the Super Admin.</p>
+    <a href="{% url 'create_event' %}" class="btn">Create Another Event</a>
+  </div>
+</body>
+</html>

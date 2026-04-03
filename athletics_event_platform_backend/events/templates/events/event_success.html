@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #e3f2fd; text-align:center; padding:50px; }
+  .card { background:white; padding:30px; border-radius:12px; display:inline-block; box-shadow:0 5px 15px rgba(0,0,0,0.2); }
+  h1 { color: #1976d2; }
+  a { display:inline-block; margin-top:20px; padding:10px 20px; background:#1976d2; color:white; text-decoration:none; border-radius:6px; }
+  a:hover { background:#1565c0; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Thank You, {{ registration.first_name }}!</h1>
+    <p>Your registration for <strong>{{ registration.event_name }}</strong> is confirmed.</p>
+    <p>Amount Paid: ${{ registration.amount }}</p>
+    <a href="{% url 'download_receipt' registration.id %}">Download Receipt</a>
+  </div>
+</body>
+</html>

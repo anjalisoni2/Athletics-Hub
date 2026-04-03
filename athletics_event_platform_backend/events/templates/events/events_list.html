@@ -1,0 +1,8 @@
+<h1>Approved Events</h1>
+<ul>
+{% for event in events %}
+    <li>{{ event.name }} - {{ event.category }} - {{ event.location }}</li>
+{% empty %}
+    <li>No events available</li>
+{% endfor %}
+</ul>
