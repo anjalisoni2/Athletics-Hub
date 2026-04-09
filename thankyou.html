@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Successful - Athletics Event Platform</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8fafc;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 500px;
+    width: 100%;
+    animation: slideUp 0.8s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .card {
+    background: white;
+    border-radius: 20px;
+    padding: 50px 40px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .success-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 30px;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 40px rgba(37, 99, 235, 0.4);
+  }
+
+  .success-icon svg {
+    width: 50px;
+    height: 50px;
+    color: white;
+  }
+
+  h1 {
+    font-size: 28px;
+    color: #1e293b;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: #64748b;
+    margin-bottom: 30px;
+  }
+
+  .event-name {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .event-name p {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 5px;
+  }
+
+  .event-name h3 {
+    font-size: 18px;
+    color: #1e293b;
+    font-weight: 600;
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .btn {
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    color: white;
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(37, 99, 235, 0.4);
+  }
+
+  .btn-secondary {
+    background: white;
+    color: #64748b;
+    border: 2px solid #e2e8f0;
+  }
+
+  .btn-secondary:hover {
+    background: #f8fafc;
+    border-color: #2563eb;
+    color: #2563eb;
+  }
+
+  .btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media (max-width: 500px) {
+    .card {
+      padding: 40px 25px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+
+    <h1>Registration Successful!</h1>
+    <p class="subtitle">Thank you for registering for this event</p>
+
+    <div class="event-name">
+      <p>Event Name</p>
+      <h3 id="eventName">Event Registration</h3>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" onclick="downloadReceipt()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download Receipt
+      </button>
+      <a href="index.html" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Back to Events
+      </a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  console.log("Thankyou page loaded");
+  
+  const registrationData = JSON.parse(localStorage.getItem("registrationData") || "{}");
+  console.log("Registration data:", registrationData);
+  
+  document.getElementById('eventName').textContent = 
+    registrationData.eventName || registrationData.event_name || 'Event Registration';
+
+  function downloadReceipt() {
+    console.log("Download receipt clicked");
+    
+    try {
+      if (typeof window.jspdf !== 'undefined') {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({unit: 'pt', format: 'a4'});
+        const pageWidth = 595;
+        const pageHeight = 842;
+        const margin = 40;
+        const contentWidth = pageWidth - (margin * 2);
+        
+        // Extract data
+        const name = registrationData.firstName || registrationData.first_name || 'N/A';
+        const lastName = registrationData.lastName || registrationData.last_name || '';
+        const email = registrationData.email || 'N/A';
+        const mobile = registrationData.mobile || 'N/A';
+        const gender = registrationData.gender || 'N/A';
+        const eventName = registrationData.eventName || registrationData.event_name || 'N/A';
+        const eventDate = registrationData.eventDate || registrationData.date || '';
+        const eventLocation = registrationData.eventLocation || registrationData.location || '';
+        const amountVal = parseFloat(registrationData.amount || registrationData.Amount || '0');
+        const amount = Math.round(amountVal).toString();
+        const regId = registrationData.registrationId || `REG-${Date.now().toString().slice(-8)}`;
+        const emergencyContact = registrationData.emergencyContact || registrationData.emergency_contact || '';
+        const medicalCondition = registrationData.medicalCondition || registrationData.medical_condition || '';
+        
+        // WHITE BACKGROUND
+        doc.setFillColor(255, 255, 255);
+        doc.rect(0, 0, pageWidth, pageHeight, 'F');
+        
+        // HEADER - Blue gradient
+        doc.setFillColor(30, 58, 138);
+        doc.rect(0, 0, pageWidth, 150, 'F');
+        
+        doc.setFillColor(37, 99, 235);
+        doc.rect(0, 0, pageWidth, 110, 'F');
+        
+        // Gold accent bar
+        doc.setFillColor(255, 193, 7);
+        doc.rect(0, 0, pageWidth, 6, 'F');
+        
+        // Checkmark icon
+        doc.setFillColor(255, 255, 255);
+        doc.circle(pageWidth / 2, 50, 28, 'F');
+        doc.setFillColor(59, 130, 246);
+        doc.circle(pageWidth / 2, 50, 22, 'F');
+        doc.setDrawColor(255, 255, 255);
+        doc.setLineWidth(3);
+        doc.line(pageWidth / 2 - 10, 50, pageWidth / 2 - 3, 58);
+        doc.line(pageWidth / 2 - 3, 58, pageWidth / 2 + 12, 42);
+        
+        // Header text
+        doc.setFontSize(24);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(255, 255, 255);
+        doc.text("REGISTRATION CONFIRMED", pageWidth / 2, 100, { align: "center" });
+        
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "normal");
+        doc.text("Athletics Event Platform", pageWidth / 2, 118, { align: "center" });
+        
+        // Receipt badge
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(pageWidth / 2 - 65, 135, 130, 26, 13, 13, 'F');
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(37, 99, 235);
+        doc.text(`Receipt ID: ${regId}`, pageWidth / 2, 153, { align: "center" });
+        
+        let y = 185;
+        
+        // Helper function for info row
+        const drawRow = (rowY, label, value) => {
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(148, 163, 184);
+          doc.text(label + ":", margin + 15, rowY);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(30, 41, 59);
+          doc.text(String(value), margin + 110, rowY);
+        };
+        
+        // ===== PARTICIPANT SECTION =====
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(margin, y, contentWidth, 130, 6, 6, 'F');
+        
+        // Header bar
+        doc.setFillColor(37, 99, 235);
+        doc.roundedRect(margin, y, contentWidth, 32, 6, 6, 'F');
+        doc.rect(margin, y + 18, contentWidth, 14, 'F');
+        
+        doc.setFillColor(255, 255, 255);
+        doc.circle(margin + 18, y + 16, 7, 'F');
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(37, 99, 235);
+        doc.text("P", margin + 18, y + 20, { align: "center" });
+        
+        doc.setFontSize(12);
+        doc.setTextColor(255, 255, 255);
+        doc.text("PARTICIPANT INFORMATION", margin + 32, y + 20);
+        
+        drawRow(y + 45, "Full Name", `${name} ${lastName}`);
+        drawRow(y + 65, "Email", email);
+        drawRow(y + 85, "Phone", mobile);
+        drawRow(y + 105, "Gender", gender.charAt(0).toUpperCase() + gender.slice(1));
+        
+        y += 150;
+        
+        // ===== EVENT SECTION =====
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(margin, y, contentWidth, 145, 6, 6, 'F');
+        
+        // Purple header
+        doc.setFillColor(99, 102, 241);
+        doc.roundedRect(margin, y, contentWidth, 32, 6, 6, 'F');
+        doc.rect(margin, y + 18, contentWidth, 14, 'F');
+        
+        doc.setFillColor(255, 255, 255);
+        doc.circle(margin + 18, y + 16, 7, 'F');
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(99, 102, 241);
+        doc.text("E", margin + 18, y + 20, { align: "center" });
+        
+        doc.setFontSize(12);
+        doc.setTextColor(255, 255, 255);
+        doc.text("EVENT DETAILS", margin + 32, y + 20);
+        
+        // Status badge
+        doc.setFillColor(37, 99, 235);
+        doc.roundedRect(pageWidth - margin - 65, y + 8, 55, 20, 10, 10, 'F');
+        doc.setFontSize(9);
+        doc.setTextColor(255, 255, 255);
+        doc.text("CONFIRMED", pageWidth - margin - 38, y + 21, { align: "center" });
+        
+        drawRow(y + 45, "Event Name", eventName.length > 35 ? eventName.substring(0, 35) + '...' : eventName);
+        drawRow(y + 65, "Event Date", eventDate || new Date().toLocaleDateString());
+        drawRow(y + 85, "Location", eventLocation || 'TBD');
+        drawRow(y + 105, "Registration Amount", "Rs. " + amount);
+        
+        y += 155;
+        
+        // ===== EMERGENCY CONTACT =====
+        if (emergencyContact) {
+          doc.setFillColor(255, 251, 235);
+          doc.roundedRect(margin, y, contentWidth, 75, 6, 6, 'F');
+          
+          // Warning icon
+          doc.setFillColor(255, 152, 0);
+          doc.circle(margin + 18, y + 22, 9, 'F');
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(255, 255, 255);
+          doc.text("!", margin + 18, y + 26, { align: "center" });
+          
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(217, 119, 6);
+          doc.text("Emergency Contact", margin + 35, y + 26);
+          
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+          doc.setTextColor(120, 53, 15);
+          doc.text(`Contact: ${emergencyContact}`, margin + 15, y + 45);
+          if (medicalCondition) {
+            doc.text(`Medical: ${medicalCondition}`, margin + 15, y + 60);
+          }
+          
+          y += 90;
+        }
+        
+        // ===== FOOTER =====
+        doc.setFillColor(248, 250, 252);
+        doc.rect(0, pageHeight - 70, pageWidth, 70, 'F');
+        
+        doc.setFillColor(226, 232, 240);
+        doc.rect(0, pageHeight - 70, pageWidth, 2, 'F');
+        
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(148, 163, 184);
+        doc.text("Terms: This receipt is auto-generated. Please carry valid ID during event. Fees are non-refundable.", pageWidth / 2, pageHeight - 50, { align: "center" });
+        
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(37, 99, 235);
+        doc.text("Athletics Event Platform", pageWidth / 2, pageHeight - 30, { align: "center" });
+        
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(148, 163, 184);
+        doc.text(`Thank you for registering! | Generated: ${new Date().toLocaleString()}`, pageWidth / 2, pageHeight - 15, { align: "center" });
+        
+        // SAVE
+        const saveName = name.replace(/\s+/g, '_') || 'user';
+        doc.save(`athletics_receipt_${saveName}_${Date.now()}.pdf`);
+        console.log("Receipt downloaded successfully");
+        
+      } else {
+        console.error("jsPDF not loaded");
+        alert('Error: Receipt library not loaded. Please refresh the page and try again.');
+      }
+    } catch (error) {
+      console.error('Error generating receipt:', error);
+      alert('Error generating receipt: ' + error.message);
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/event", "destination": "/event.html" },
+    { "source": "/(scripts|styles|images|assets)/(.*)", "destination": "/$1/$2" },
+    { "source": "/(.*\\.html)", "destination": "/$1" }
+  ]
+}
