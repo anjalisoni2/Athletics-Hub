@@ -1,0 +1,40 @@
+<h1>Pending Events</h1>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Category</th>
+    <th>Location</th>
+    <th>Start Date</th>
+    <th>Actions</th>
+  </tr>
+  {% for event in events %}
+  <tr>
+    <td>{{ event.id }}</td>
+    <td>{{ event.name }}</td>
+    <td>{{ event.category }}</td>
+    <td>{{ event.location }}</td>
+    <td>{{ event.start_date }}</td>
+    <td>
+      <button onclick="approve({{ event.id }})">Approve</button>
+      <button onclick="reject({{ event.id }})">Reject</button>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="6">No pending events</td></tr>
+  {% endfor %}
+</table>
+
+<script>
+function approve(id) {
+  fetch(`/super-admin/events/approve/${id}/`, { method: 'POST' })
+    .then(res => res.json())
+    .then(data => { if(data.status==='approved') location.reload(); });
+}
+
+function reject(id) {
+  fetch(`/super-admin/events/reject/${id}/`, { method: 'POST' })
+    .then(res => res.json())
+    .then(data => { if(data.status==='rejected') location.reload(); });
+}
+</script>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthleticsHub - Next-Generation Athletics Platform</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/fitness-dashboard.css">
+    <!-- Leaflet Map CSS (Stable Version) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav id="navigation" class="navbar hidden">
+        <div class="container navbar-container">
+            <div class="navbar-brand" onclick="navigateTo('landing')">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="2" />
+                        <path
+                            d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14" />
+                    </svg>
+                </div>
+                <span class="logo-text">AthleticsHub</span>
+            </div>
+            <div class="navbar-links" id="navbarLinks">
+                <!-- Navigation links will be dynamically inserted -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main id="app">
+        <!-- Dynamic content will be loaded here -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-main">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <!-- Brand Section -->
+                <div class="footer-section footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="2" />
+                                <path
+                                    d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14" />
+                            </svg>
+                        </div>
+                        <span class="footer-logo-text">AthleticsHub</span>
+                    </div>
+                    <p class="footer-description">Empowering athletes worldwide through innovative event management and
+                        tracking solutions.</p>
+                    <div class="footer-social">
+                        <a href="#" class="footer-social-link" title="Facebook">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h2v8h4v-8h3l1-4h-4V8a2 2 0 0 1 2-2h1z" />
+                            </svg>
+                        </a>
+                        <a href="#" class="footer-social-link" title="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2s9 5 20 5a9.5 9.5 0 00-9-5.5c4.75 2.25 7-7 7-7" />
+                            </svg>
+                        </a>
+                        <a href="#" class="footer-social-link" title="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+                                <circle cx="17.5" cy="6.5" r="1.5" />
+                            </svg>
+                        </a>
+                        <a href="#" class="footer-social-link" title="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+                                <circle cx="4" cy="4" r="2" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Quick Links</h3>
+                    <ul class="footer-link-list">
+                        <li><a href="#" onclick="navigateTo('landing');return false;" class="footer-link">Home</a></li>
+                        <li><a href="#" onclick="navigateTo('events'); return false;" class="footer-link">Browse
+                                Events</a></li>
+                        <li><a href="#" onclick="navigateTo('events'); return false;" class="footer-link">Find Races</a>
+                        </li>
+                        <li><a href="#" onclick="goToDashboard(); return false;" class="footer-link">My Dashboard</a></li>
+                        <li><a href="#" onclick="navigateTo('events'); return false;" class="footer-link">Track Results</a></li>
+                    </ul>
+                </div>
+
+                <!-- For Athletes -->
+                <div class="footer-section">
+                    <h3 class="footer-section-title">For Athletes</h3>
+                    <ul class="footer-link-list">
+                        <li><a href="#" onclick="navigateTo('events'); return false;" class="footer-link">Register for Events</a></li>
+                        <li><a href="#" onclick="navigateTo('fitness-dashboard'); return false;" class="footer-link">Track Performance</a></li>
+                        <li><a href="#" onclick="navigateTo('live-tracking'); return false;" class="footer-link">View Results</a></li>
+                        <li><a href="#" class="footer-link">Training Tips</a></li>
+                        <li><a href="#" class="footer-link">Community Forum</a></li>
+                    </ul>
+                </div>
+
+                <!-- For Organizers -->
+                <div class="footer-section">
+                    <h3 class="footer-section-title">For Organizers</h3>
+                    <ul class="footer-link-list">
+                        <li><a href="event.html" class="footer-link">Create Event</a></li>
+                        <li><a href="#" onclick="goToDashboard(); return false;" class="footer-link">Manage Registrations</a></li>
+                        <li><a href="#" onclick="navigateTo('live-tracking'); return false;" class="footer-link">Live Tracking</a></li>
+                        <li><a href="#" onclick="navigateTo('organizers-report'); return false;" class="footer-link">Reports & Analytics</a></li>
+                        <li><a href="#" class="footer-link">Support Center</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Support -->
+                <div class="footer-section">
+                    <h3 class="footer-section-title">Contact & Support</h3>
+                    <ul class="footer-link-list">
+                        <li><a href="mailto:support@athleticshub.com" class="footer-link">support@athleticshub.com</a>
+                        </li>
+                        <li><a href="tel:+1234567890" class="footer-link">+1 (234) 567-890</a></li>
+                        <li><a href="#" class="footer-link">Help Center</a></li>
+                        <li><a href="#" class="footer-link">FAQ</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-legal">
+                    <a href="#" class="footer-legal-link">Privacy Policy</a>
+                    <span class="footer-legal-separator">•</span>
+                    <a href="#" class="footer-legal-link">Terms of Service</a>
+                    <span class="footer-legal-separator">•</span>
+                    <a href="#" class="footer-legal-link">Cookie Policy</a>
+                    <span class="footer-legal-separator">•</span>
+                    <a href="#" class="footer-legal-link">Accessibility</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2024 AthleticsHub. All rights reserved. | Powered by next-generation athletics technology
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Leaflet Map JS (Stable Version - MUST load before app.js) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Socket.IO JS -->
+    <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Maps -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN5upL_RakFK3C2Ws8bGpt4urItG8mrpw&libraries=geometry,drawing,places,routes"
+        async defer></script>
+    <!-- Main App (loads after all dependencies) -->
+    <script type="module" src="scripts/app.js"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Approve Event</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f3f4f6; color: #1f2933; }
+    .container { max-width: 700px; margin: 50px auto; background: #fff; padding: 24px; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+    h1 { text-align: center; margin-bottom: 20px; }
+    .event-detail { margin-bottom: 20px; }
+    label { font-weight: bold; display: block; margin-bottom: 4px; }
+    .value { margin-bottom: 12px; }
+    .actions { display: flex; justify-content: space-between; }
+    .btn { padding: 10px 20px; border-radius: 999px; border: none; cursor: pointer; font-size: 14px; color: #fff; }
+    .btn-approve { background: #10b981; }
+    .btn-reject { background: #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Approve Event</h1>
+
+    <div class="event-detail">
+      <label>Event Name:</label>
+      <div class="value">{{ event.name }}</div>
+
+      <label>Category:</label>
+      <div class="value">{{ event.category }}</div>
+
+      <label>Location:</label>
+      <div class="value">{{ event.location }}</div>
+
+      <label>Start:</label>
+      <div class="value">{{ event.start_date }} {{ event.start_time }}</div>
+
+      <label>End:</label>
+      <div class="value">{{ event.end_date }} {{ event.end_time }}</div>
+
+      <label>Description:</label>
+      <div class="value">{{ event.description }}</div>
+    </div>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="actions">
+        <button type="submit" name="approve" class="btn btn-approve">Approve</button>
+        <button type="submit" name="reject" class="btn btn-reject">Reject</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

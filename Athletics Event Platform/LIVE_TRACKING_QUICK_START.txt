@@ -1,0 +1,177 @@
+================================================================================
+⚡ QUICK START: Live Tracking Map
+================================================================================
+
+STEP 1: Install Dependencies
+────────────────────────────
+Open terminal and run:
+  pip install python-socketio eventlet
+
+
+STEP 2: Start Socket.IO Server
+──────────────────────────────
+In your project root directory:
+  python socket_server.py
+
+Expected output:
+  ✓ Broadcast thread started
+  🚀 Starting server... waiting for connections...
+
+Keep this terminal OPEN! ⚠️
+
+
+STEP 3: Open Live Tracking Map
+───────────────────────────────
+1. Start your Django development server (if not running)
+2. Navigate to the Live Tracking page in your app
+3. Click the "Track Map" tab
+
+
+STEP 4: Check Browser Console
+──────────────────────────────
+Press F12 to open DevTools, go to Console tab.
+
+You should see messages like:
+
+✅ SUCCESS! Connected to Socket.IO server
+   📍 Runner location update: 101
+   📍 Runner location update: 102
+   ...
+
+
+================================================================================
+✅ WORKING CORRECTLY?
+================================================================================
+
+Map shows:
+  ✓ 4 colored runner markers
+  ✓ Route lines (polylines) for each runner
+  ✓ Markers move every 2 seconds
+  ✓ Console shows location updates
+  ✓ No red error messages (❌) in console
+
+
+================================================================================
+❌ TROUBLESHOOTING
+================================================================================
+
+Problem: "Connection refused" error in console
+────────────────────────────────────────────
+Make sure socket_server.py is running!
+  → Check the terminal where you started the server
+  → Should show "waiting for connections..."
+  → If not running, start it with: python socket_server.py
+
+
+Problem: "Port 5000 already in use"
+───────────────────────────────────
+Another app is using port 5000.
+  → Windows: netstat -ano | findstr :5000
+  → Mac/Linux: lsof -i :5000
+  → Kill the process or change port in socket_server.py
+
+
+Problem: Map loads but no runners visible
+──────────────────────────────────────────
+  1. Check browser console (F12) for errors
+  2. Make sure socket_server.py is running
+  3. Refresh the page (Ctrl+R)
+  4. Check if "✓ Leaflet" message appears in console
+
+
+Problem: "Module not found: socketio"
+─────────────────────────────────────
+Packages not installed properly.
+  → Run: pip install python-socketio eventlet
+  → Make sure pip is pointing to correct Python version
+
+
+================================================================================
+💡 WHAT'S HAPPENING?
+================================================================================
+
+Map Container:
+  • Leaflet.js loads the interactive OpenStreetMap
+  • Map initialized at [23.0225, 72.5714] (Ahmedabad)
+  • Zoom level: 14
+
+Socket.IO Connection:
+  • Frontend tries to connect to http://localhost:5000
+  • Socket server broadcasts runner locations
+  • Live updates come every 2 seconds
+
+Runners:
+  • 4 simulated runners with IDs: 101, 102, 103, 104
+  • Each has colored marker and polyline route
+  • Move progressively toward finish line
+  • Markers created dynamically if not found
+
+Fallback Mode:
+  • If Socket.IO unavailable → mock data takes over
+  • Runners still move on map (locally simulated)
+  • No real-time updates, but app still works
+
+
+================================================================================
+📋 WHAT YOU SHOULD SEE IN CONSOLE
+================================================================================
+
+When page loads:
+  📡 Attempting to connect to Socket.IO server...
+  ✓ Leaflet library loaded successfully
+  🗺️ Initializing Leaflet map...
+  ✓ Map instance created
+  ✓ Map tiles loaded
+  📍 Initializing 4 runner markers...
+    ✓ Marker created for Bib 101
+    ✓ Marker created for Bib 102
+    ✓ Marker created for Bib 103
+    ✓ Marker created for Bib 104
+  ✓ All runner markers initialized
+
+Socket.IO connecting:
+  ✅ SUCCESS! Connected to Socket.IO server
+     Socket ID: (some-id-here)
+
+Live updates:
+  📍 Runner location update: 101
+  📍 Runner location update: 102
+  📍 Runner location update: 103
+  📍 Runner location update: 104
+  [repeats every 2 seconds]
+
+
+================================================================================
+🔗 IMPORTANT LINKS
+================================================================================
+
+Setup Help:
+  → Read: SOCKET_SERVER_SETUP.md
+
+Socket Server:
+  → File: socket_server.py
+
+Map Code:
+  → File: public/scripts/views/live-tracking.js
+
+HTML Setup:
+  → File: public/index.html (check Leaflet/Socket.IO CDN links)
+
+
+================================================================================
+✨ ALL WORKING? GREAT!
+================================================================================
+
+Your live tracking map is now ready to use!
+
+Key Features:
+  ✓ Real-time runner position updates
+  ✓ Route history visualization
+  ✓ Checkpoint markers
+  ✓ Start/Finish line markers
+  ✓ Auto-reconnect on connection loss
+  ✓ Graceful fallback to mock data
+
+For production, connect to real GPS data from runners!
+
+================================================================================

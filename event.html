@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create New Event</title>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN5upL_RakFK3C2Ws8bGpt4urItG8mrpw&libraries=geometry,drawing,places,routes" async defer></script>
+<style>
+  body {
+  font-family: Arial, sans-serif;
+  background: #f3f4f6;
+  margin: 0;
+  padding: 0;
+  font-size: 16px; /* or 17px / 18px */
+}
+.container { max-width: 750px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+  h2 { margin:0 0 10px 0; text-align:center; }
+  label { font-weight: 600; margin-top: 12px; display: block; }
+  input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
+  button { margin-top: 20px; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; }
+  .btn-primary { background: #2563eb; color: white; }
+  .btn-primary:hover { background: #1d4ed8; }
+  .btn-cancel { background: #e5e7eb; }
+  .row { display: flex; gap: 28px; }
+  .row .field { flex:1; display:flex; flex-direction:column; }
+  .payment-notice { background: #dbeafe; border-left: 4px solid #2563eb; padding: 12px; margin: 20px 0; border-radius: 4px; }
+  .payment-notice p { margin: 0; color: #1e40af; font-size: 14px; }
+
+  /* Back to Events Button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* space between arrow and text */
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e40af; /* button text color */
+  background-color: #fff; /* button background */
+  border: 2px solid #1e40af; /* border color */
+  border-radius: 12px; /* rounded corners */
+  cursor: pointer;
+  text-decoration: none; /* remove underline */
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  color: #fff; /* text turns white on hover */
+  transform: translateY(-2px); /* slight lift effect */
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3); /* subtle shadow */
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    
+    <a href="index.html" class="back-btn">← Back to Events</a>
+  <h2 id="formTitle">Create New Event</h2>
+
+  <form id="createEventForm" enctype="multipart/form-data">
+
+    <!-- Event Name & Category -->
+    <div class="row">
+      <div class="field">
+        <label>Event Name</label>
+        <input type="text" name="name" placeholder="City Marathon 2026" required>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select name="category" required>
+          <option value="">Select</option>
+          <option>Marathon</option>
+          <option>Half Marathon</option>
+          <option>Cyclothon</option>
+          <option>Triathlon</option>
+          <option>Trail Run</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Start & End Date -->
+    <div class="row">
+      <div class="field">
+        <label>Event Date </label>
+        <input type="date" name="start_date" required>
+      </div>
+      <div class="field">
+        <label>Registration End </label>
+        <input type="date" name="end_date" required>
+      </div>
+    </div>
+
+    <!-- Start & End Time -->
+    <div class="row">
+      <div class="field">
+        <label>Start Time</label>
+        <input type="time" name="start_time" required>
+      </div>
+      <div class="field">
+        <label>End Time</label>
+        <input type="time" name="end_time" required>
+      </div>
+    </div>
+
+    <!-- Location -->
+   <div class="row">
+      <div class="field">
+        <label>Start location</label>
+        <input type="text" name="Start_location" placeholder="Enter Your Start point" required>
+      </div>
+      <div class="field">
+        <label>End Location</label>
+        <input type="text" name="End_location" placeholder="Enter Your End point" required>
+      </div>
+    </div>
+    <!-- Distance & Max Participants -->
+    <div class="row">
+      <div class="field">
+        <label>Distance</label>
+        <div style="position: relative; display: flex; align-items: center;">
+          <input type="text" name="distance" placeholder="42.2 km" style="padding-right: 80px;">
+          <button type="button" onclick="updateDistance()" style="position: absolute; right: 5px; top: 12px; margin: 0; padding: 5px 10px; font-size: 12px; background: #f3f4f6; border: 1px solid #d1d5db; color: #374151; border-radius: 4px; line-height: 1;">🔄 Fetch</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Max Participants</label>
+        <input type="number" name="max_participants" placeholder="5000">
+      </div>
+    </div>
+
+    <!-- Fee -->
+    <label>Registration Fee (INR)</label>
+    <input type="number" name="fee" placeholder="75">
+
+    <!-- Banner -->
+    <label>Event Banner</label>
+    <input type="file" name="image" accept="image/*">
+
+    <!-- Description -->
+    <label>Description</label>
+    <textarea name="description" rows="3" placeholder="Describe your event..."></textarea>
+
+    <!-- Payment Section -->
+    <div class="payment-notice">
+      <p>📌 A payment of ₹150 is required to create this event. Click "Create Event" to proceed with payment.</p>
+    </div>
+
+    <!-- Buttons -->
+    <div style="display:flex; gap:12px;">
+      <button type="button" class="btn-cancel" onclick="form.reset()">Cancel</button>
+      <button type="submit" class="btn-primary">Create Event</button>
+    </div>
+
+  </form>
+</div>
+
+
+
+<script type="module">
+import { getAPIEndpoint } from './scripts/api-config.js';
+
+// Check if editing existing event
+const urlParams = new URLSearchParams(window.location.search);
+const editEventId = urlParams.get('id');
+
+if (editEventId) {
+    document.getElementById('formTitle').textContent = 'Edit Event';
+    document.querySelector('button[type="submit"]').textContent = 'Update Event';
+    loadEventForEdit(editEventId);
+}
+
+async function loadEventForEdit(eventId) {
+    try {
+        const events = JSON.parse(localStorage.getItem("events") || "[]");
+        const event = events.find(e => String(e.id) === String(eventId));
+        
+        if (event) {
+            document.querySelector('input[name="name"]').value = event.name || '';
+            document.querySelector('select[name="category"]').value = event.category || '';
+            document.querySelector('input[name="start_date"]').value = event.start_date || '';
+            document.querySelector('input[name="end_date"]').value = event.end_date || '';
+            document.querySelector('input[name="start_time"]').value = event.start_time || '';
+            document.querySelector('input[name="end_time"]').value = event.end_time || '';
+            document.querySelector('input[name="Start_location"]').value = event.Start_location || event.location?.split(' to ')[0] || '';
+            document.querySelector('input[name="End_location"]').value = event.End_location || event.location?.split(' to ')[1] || '';
+            document.querySelector('input[name="distance"]').value = event.distance || '';
+            document.querySelector('input[name="max_participants"]').value = event.max_participants || '';
+            document.querySelector('input[name="fee"]').value = event.fee || '';
+            document.querySelector('textarea[name="description"]').value = event.description || '';
+        }
+    } catch (err) {
+        console.error('Error loading event for edit:', err);
+    }
+}
+
+// --- AUTO-DISTANCE CALCULATION LOGIC ---
+
+// Geocode location using Nominatim API
+async function geocodeLocation(locationName) {
+    if (!locationName || locationName.trim() === '') return null;
+
+    try {
+        const encodedLocation = encodeURIComponent(locationName);
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodedLocation}&format=json&limit=1`;
+
+        console.log("Geocoding:", locationName);
+        const response = await fetch(url, {
+            headers: { 'User-Agent': 'AthleticsHub-App' }
+        });
+
+        if (!response.ok) throw new Error("Nominatim API error");
+
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+            const result = data[0];
+            const coords = {
+                lat: parseFloat(result.lat),
+                lng: parseFloat(result.lon)
+            };
+            console.log("✓ Geocoded:", locationName, coords);
+            return coords;
+        } else {
+            console.error("No results found for:", locationName);
+            return null;
+        }
+    } catch (err) {
+        console.error('Geocoding error:', err);
+        return null;
+    }
+}
+
+// Fetch distance using OSRM API directly
+async function fetchDistanceOSRM(start, end) {
+    try {
+        if (!start || !end) {
+            console.error("Invalid coordinates for OSRM");
+            return null;
+        }
+
+        // Ensure coordinates are numbers
+        const startLng = parseFloat(start.lng);
+        const startLat = parseFloat(start.lat);
+        const endLng = parseFloat(end.lng);
+        const endLat = parseFloat(end.lat);
+
+        const url = `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`;
+
+        console.log("OSRM Request - Start:", startLat, startLng, "End:", endLat, endLng);
+        console.log("OSRM URL:", url);
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            console.error("OSRM API returned status:", response.status);
+            throw new Error("OSRM API error");
+        }
+
+        const data = await response.json();
+        console.log("OSRM Response:", data);
+
+        if (data.routes && data.routes.length > 0) {
+            const route = data.routes[0];
+            const distanceMeters = route.distance;
+            const distanceKm = (distanceMeters / 1000).toFixed(2);
+            const duration = Math.round(route.duration / 60);
+
+            console.log("✓ OSRM Success - Distance:", distanceKm, "km, Duration:", duration, "min");
+            return distanceKm;
+        } else {
+            console.error("OSRM: No routes found in response");
+            return null;
+        }
+    } catch (err) {
+        console.error('OSRM fetch error:', err.message);
+        return null;
+    }
+}
+
+// Fallback: Calculate straight-line distance using Haversine formula
+function calculateStraightLineDistance(start, end) {
+    if (!start || !end) return null;
+
+    const R = 6371; // Earth radius in km
+    const dLat = (end.lat - start.lat) * Math.PI / 180;
+    const dLon = (end.lng - start.lng) * Math.PI / 180;
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(start.lat * Math.PI / 180) * Math.cos(end.lat * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+
+    // Return without 20% estimation - just straight line
+    return distance.toFixed(2);
+}
+
+window.updateDistance = async function() {
+    const startLocInput = document.querySelector('input[name="Start_location"]');
+    const endLocInput = document.querySelector('input[name="End_location"]');
+    const distanceInput = document.querySelector('input[name="distance"]');
+
+    let startLoc = startLocInput.value.trim();
+    let endLoc = endLocInput.value.trim();
+
+    if (!startLoc || !endLoc) {
+        distanceInput.value = "";
+        distanceInput.placeholder = "Enter both locations to calculate";
+        return;
+    }
+
+    distanceInput.placeholder = "🔄 Calculating distance...";
+    distanceInput.disabled = true;
+
+    try {
+        console.log("===== DISTANCE CALCULATION START =====");
+        console.log("Start Location:", startLoc);
+        console.log("End Location:", endLoc);
+
+        // STEP 1: Geocode start location
+        console.log("\n📍 Step 1: Geocoding start location...");
+        const startCoord = await geocodeLocation(startLoc);
+        if (!startCoord) {
+            console.error("❌ Start location geocoding failed");
+            distanceInput.placeholder = "⚠️ Start location not found";
+            distanceInput.disabled = false;
+            return;
+        }
+        console.log("✓ Start coords:", startCoord);
+
+        // STEP 2: Geocode end location
+        console.log("\n📍 Step 2: Geocoding end location...");
+        const endCoord = await geocodeLocation(endLoc);
+        if (!endCoord) {
+            console.error("❌ End location geocoding failed");
+            distanceInput.placeholder = "⚠️ End location not found";
+            distanceInput.disabled = false;
+            return;
+        }
+        console.log("✓ End coords:", endCoord);
+
+        // STEP 3: Fetch distance from OSRM
+        console.log("\n🛣️ Step 3: Fetching OSRM route distance...");
+        let distance = await fetchDistanceOSRM(startCoord, endCoord);
+
+        // STEP 4: Fallback to straight-line if OSRM fails
+        if (!distance) {
+            console.log("\n⚠️ Step 4: OSRM failed, using straight-line calculation...");
+            distance = calculateStraightLineDistance(startCoord, endCoord);
+            console.log("Straight-line distance:", distance, "km");
+            if (distance) {
+                distanceInput.value = distance + " km";
+                console.log("✓ Using straight-line distance:", distance, "km");
+            } else {
+                console.error("❌ Could not calculate distance");
+                distanceInput.placeholder = "Could not calculate distance";
+            }
+        } else {
+            distanceInput.value = distance + " km";
+            console.log("\n✅ FINAL DISTANCE:", distance, "km");
+        }
+
+        console.log("===== DISTANCE CALCULATION END =====\n");
+
+    } catch (err) {
+        console.error("Error during distance calculation:", err);
+        distanceInput.placeholder = "Error calculating distance";
+    } finally {
+        distanceInput.disabled = false;
+    }
+}
+
+// Attach listeners to location fields
+document.addEventListener('DOMContentLoaded', () => {
+    const startInput = document.querySelector('input[name="Start_location"]');
+    const endInput = document.querySelector('input[name="End_location"]');
+
+    if (startInput && endInput) {
+        // Debounce function to avoid too many API calls
+        let timeout = null;
+        const debouncedUpdate = () => {
+            clearTimeout(timeout);
+            timeout = setTimeout(updateDistance, 1000);
+        };
+
+        startInput.addEventListener('input', debouncedUpdate);
+        endInput.addEventListener('input', debouncedUpdate);
+    }
+});
+
+// --- END AUTO-DISTANCE CALCULATION LOGIC ---
+
+// Razorpay Test Mode Configuration
+// Note: Replace with your actual Razorpay test key ID
+const RAZORPAY_CONFIG = {
+    key_id: 'rzp_test_1DP5oD4uwfY1rz',
+    payment_amount: 15000, // Amount in paise (150 INR = 15000 paise)
+    currency: 'INR'
+};
+
+document.getElementById('createEventForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+
+    // Validate form
+    if (!form.checkValidity()) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    // Get current user (organizer) from localStorage
+    const currentUser = localStorage.getItem("currentUser");
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    const userData = users[currentUser];
+
+    // If editing, update event without payment
+    if (editEventId) {
+        await updateEvent(editEventId, form, userData, currentUser);
+        return;
+    }
+
+    // Determine organizer name and email
+    let organizerName = currentUser;
+    let organizerEmail = 'organizer@athleticsplatform.com';
+
+    if (userData && userData.organizationName) {
+        organizerName = userData.organizationName;
+    } else if (userData && userData.name) {
+        organizerName = userData.name;
+    }
+
+    if (userData && userData.email) {
+        organizerEmail = userData.email;
+    }
+
+    // Store form data for use after payment
+    const eventData = {
+        name: form.name.value,
+        category: form.category.value,
+        start_date: form.start_date.value,
+        end_date: form.end_date.value,
+        start_time: form.start_time.value,
+        end_time: form.end_time.value,
+        Start_location: form.Start_location.value,
+        End_location: form.End_location.value,
+        distance: form.distance.value,
+        max_participants: form.max_participants.value || 0,
+        fee: form.fee.value || 0,
+        description: form.description.value,
+        image: form.image.files[0] || null,
+        organizer: organizerName,
+        organizerEmail: organizerEmail,
+        createdByUsername: currentUser
+    };
+
+    // Initialize Razorpay payment
+    initializeRazorpayPayment(eventData);
+});
+
+function initializeRazorpayPayment(eventData) {
+    // For testing on Vercel and local development
+    const isTestEnvironment = window.location.hostname === 'localhost' || 
+                              window.location.hostname === '127.0.0.1' || 
+                              window.location.hostname.includes('vercel.app');
+
+    if (isTestEnvironment) {
+        // Show test payment dialog (no real Razorpay key needed)
+        showTestPaymentDialog(eventData);
+    } else {
+        // Production: use real Razorpay
+        processRealPayment(eventData);
+    }
+}
+
+window.showTestPaymentDialog = function(eventData) {
+    const dialogHTML = `
+        <div id="test-payment-modal" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        ">
+            <div style="
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                max-width: 450px;
+                width: 90%;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            ">
+                <h2 style="margin-top: 0; text-align: center; color: #333;">💳 Test Payment</h2>
+                <p style="text-align: center; color: #666; font-size: 14px;">
+                    You are in test/development mode. Select a payment method to proceed:
+                </p>
+
+                <div style="margin: 20px 0; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #2563eb;">
+                    <p style="margin: 0; font-size: 14px; color: #1e40af;">
+                        <strong>Amount:</strong> ₹150<br/>
+                        <strong>Event:</strong> ${eventData.name}
+                    </p>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <button onclick="processTestPayment('card', '${eventData.name.replace(/'/g, "\\'")}', '${eventData.organizer.replace(/'/g, "\\'")}');" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-bottom: 10px;
+                        background: #2563eb;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-size: 15px;
+                    ">
+                        💳 Pay with Card
+                    </button>
+                    <button onclick="processTestPayment('upi', '${eventData.name.replace(/'/g, "\\'")}', '${eventData.organizer.replace(/'/g, "\\'")}');" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-bottom: 10px;
+                        background: #7c3aed;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-size: 15px;
+                    ">
+                        📱 Pay with UPI
+                    </button>
+                    <button onclick="processTestPayment('qr', '${eventData.name.replace(/'/g, "\\'")}', '${eventData.organizer.replace(/'/g, "\\'")}');" style="
+                        width: 100%;
+                        padding: 12px;
+                        margin-bottom: 10px;
+                        background: #059669;
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-size: 15px;
+                    ">
+                        📲 Pay with QR Code
+                    </button>
+                    <button onclick="closeTestPaymentDialog();" style="
+                        width: 100%;
+                        padding: 12px;
+                        background: #e5e7eb;
+                        color: #333;
+                        border: none;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-size: 15px;
+                    ">
+                        ✕ Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', dialogHTML);
+}
+
+window.closeTestPaymentDialog = function() {
+    const modal = document.getElementById('test-payment-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+window.showCardPaymentForm = function(eventName, organizer) {
+    closeTestPaymentDialog();
+
+    const cardFormHTML = `
+        <div id="card-payment-modal" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        ">
+            <div style="
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                max-width: 450px;
+                width: 90%;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            ">
+                <h2 style="margin: 0 0 20px 0; text-align: center; color: #333;">💳 Card Payment</h2>
+                <div style="background: #f0f9ff; border-left: 4px solid #2563eb; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                    <p style="margin: 0; font-size: 14px; color: #1e40af;"><strong>Amount:</strong> ₹150</p>
+                </div>
+                <form onsubmit="processCardPayment(event, '${eventName.replace(/'/g, "\\'")}', '${organizer.replace(/'/g, "\\'")}');">
+                    <div id="card-error" style="display: none; background: #fee; border: 1px solid #fcc; color: #c33; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 13px;"></div>
+
+                    <label style="font-weight: 600; margin-bottom: 5px; display: block;">Cardholder Name</label>
+                    <input type="text" id="card-name" placeholder="John Doe" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+
+                    <label style="font-weight: 600; margin-bottom: 5px; display: block;">Card Number <span id="card-type" style="font-weight: normal; color: #666; font-size: 12px;"></span></label>
+                    <input type="text" id="card-number" placeholder="4111 1111 1111 1111" maxlength="19" onkeyup="formatCardNumber(this); detectCardType();" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <div style="flex: 1;">
+                            <label style="font-weight: 600; margin-bottom: 5px; display: block;">Expiry (MM/YY)</label>
+                            <input type="text" id="card-expiry" placeholder="12/25" maxlength="5" onkeyup="formatExpiry(this);" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-weight: 600; margin-bottom: 5px; display: block;">CVV</label>
+                            <input type="text" id="card-cvv" placeholder="123" maxlength="4" onkeyup="this.value = this.value.replace(/[^0-9]/g, '');" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" style="flex: 1; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Pay ₹150</button>
+                        <button type="button" onclick="closeCardPaymentForm();" style="flex: 1; padding: 12px; background: #e5e7eb; color: #333; border: none; border-radius: 8px; cursor: pointer;">Cancel</button>
+                    </div>
+                </form>
+                <p style="text-align: center; margin-top: 15px; font-size: 12px; color: #999;">Test Card: 4111 1111 1111 1111 | Expiry: 12/25 | CVV: 123</p>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', cardFormHTML);
+}
+
+window.closeCardPaymentForm = function() {
+    const modal = document.getElementById('card-payment-modal');
+    if (modal) modal.remove();
+}
+
+window.formatCardNumber = function(input) {
+    let value = input.value.replace(/\s/g, '');
+    let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+    input.value = formatted;
+}
+
+window.formatExpiry = function(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+    }
+    input.value = value;
+}
+
+window.detectCardType = function() {
+    const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+    const typeEl = document.getElementById('card-type');
+
+    let cardType = 'Unknown';
+    if (/^4/.test(cardNumber)) {
+        cardType = 'Visa';
+    } else if (/^5[1-5]/.test(cardNumber)) {
+        cardType = 'Mastercard';
+    } else if (/^3[47]/.test(cardNumber)) {
+        cardType = 'American Express';
+    } else if (/^6(?:011|5)/.test(cardNumber)) {
+        cardType = 'Discover';
+    }
+
+    typeEl.textContent = cardNumber.length >= 4 ? `(${cardType})` : '';
+}
+
+function luhnCheck(cardNumber) {
+    let sum = 0;
+    let isEven = false;
+
+    for (let i = cardNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cardNumber.charAt(i), 10);
+
+        if (isEven) {
+            digit *= 2;
+            if (digit > 9) {
+                digit -= 9;
+            }
+        }
+
+        sum += digit;
+        isEven = !isEven;
+    }
+
+    return sum % 10 === 0;
+}
+
+function showCardError(message) {
+    const errorEl = document.getElementById('card-error');
+    if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+    }
+}
+
+function clearCardError() {
+    const errorEl = document.getElementById('card-error');
+    if (errorEl) {
+        errorEl.style.display = 'none';
+    }
+}
+
+window.processCardPayment = function(e, eventName, organizer) {
+    e.preventDefault();
+    clearCardError();
+
+    const cardName = document.getElementById('card-name').value.trim();
+    const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+    const cardExpiry = document.getElementById('card-expiry').value.trim();
+    const cardCVV = document.getElementById('card-cvv').value.trim();
+
+    // Cardholder Name Validation
+    if (!cardName) {
+        showCardError('Cardholder name is required');
+        return;
+    }
+
+    if (cardName.length < 3) {
+        showCardError('Cardholder name must be at least 3 characters');
+        return;
+    }
+
+    if (!/^[a-zA-Z\s]+$/.test(cardName)) {
+        showCardError('Cardholder name can only contain letters and spaces');
+        return;
+    }
+
+    // Card Number Validation
+    if (!cardNumber) {
+        showCardError('Card number is required');
+        return;
+    }
+
+    if (!/^\d+$/.test(cardNumber)) {
+        showCardError('Card number must contain only digits');
+        return;
+    }
+
+    if (cardNumber.length < 13 || cardNumber.length > 19) {
+        showCardError('Card number must be between 13 and 19 digits');
+        return;
+    }
+
+    // Validate card using Luhn algorithm
+    if (!luhnCheck(cardNumber)) {
+        showCardError('Invalid card number. Please check and try again');
+        return;
+    }
+
+    // Expiry Date Validation
+    if (!cardExpiry) {
+        showCardError('Expiry date is required');
+        return;
+    }
+
+    if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+        showCardError('Expiry must be in MM/YY format (e.g., 12/25)');
+        return;
+    }
+
+    const [month, year] = cardExpiry.split('/');
+    const monthInt = parseInt(month, 10);
+
+    if (monthInt < 1 || monthInt > 12) {
+        showCardError('Month must be between 01 and 12');
+        return;
+    }
+
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear() % 100;
+    const currentMonth = currentDate.getMonth() + 1;
+    const expiryYear = parseInt(year, 10);
+
+    if (expiryYear < currentYear) {
+        showCardError('Card has expired');
+        return;
+    }
+
+    if (expiryYear === currentYear && monthInt < currentMonth) {
+        showCardError('Card has expired');
+        return;
+    }
+
+    // CVV Validation
+    if (!cardCVV) {
+        showCardError('CVV is required');
+        return;
+    }
+
+    if (!/^\d{3,4}$/.test(cardCVV)) {
+        showCardError('CVV must be 3 or 4 digits');
+        return;
+    }
+
+    // All validations passed
+    closeCardPaymentForm();
+    processPaymentSuccess('card', `Card ending in ${cardNumber.slice(-4)}`, eventName, organizer);
+}
+
+window.showUPIPaymentForm = function(eventName, organizer) {
+    closeTestPaymentDialog();
+
+    const upiFormHTML = `
+        <div id="upi-payment-modal" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        ">
+            <div style="
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                max-width: 450px;
+                width: 90%;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            ">
+                <h2 style="margin: 0 0 20px 0; text-align: center; color: #333;">📱 UPI Payment</h2>
+                <div style="background: #f0f9ff; border-left: 4px solid #7c3aed; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                    <p style="margin: 0; font-size: 14px; color: #1e40af;"><strong>Amount:</strong> ₹150</p>
+                </div>
+                <form onsubmit="processUPIPayment(event, '${eventName.replace(/'/g, "\\'")}', '${organizer.replace(/'/g, "\\'")}');">
+                    <label style="font-weight: 600; margin-bottom: 5px; display: block;">UPI ID</label>
+                    <input type="text" id="upi-id" placeholder="yourname@bankname" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+
+                    <label style="font-weight: 600; margin-bottom: 5px; display: block;">Mobile Number</label>
+                    <input type="tel" id="upi-mobile" placeholder="9876543210" maxlength="10" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" style="flex: 1; padding: 12px; background: #7c3aed; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Pay ₹150</button>
+                        <button type="button" onclick="closeUPIPaymentForm();" style="flex: 1; padding: 12px; background: #e5e7eb; color: #333; border: none; border-radius: 8px; cursor: pointer;">Cancel</button>
+                    </div>
+                </form>
+                <p style="text-align: center; margin-top: 15px; font-size: 12px; color: #999;">Test UPI: success@razorpay</p>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', upiFormHTML);
+}
+
+window.closeUPIPaymentForm = function() {
+    const modal = document.getElementById('upi-payment-modal');
+    if (modal) modal.remove();
+}
+
+window.processUPIPayment = function(e, eventName, organizer) {
+    e.preventDefault();
+
+    const upiId = document.getElementById('upi-id').value.trim();
+    const mobileNumber = document.getElementById('upi-mobile').value.trim();
+
+    // UPI ID validation
+    if (!/^[a-zA-Z0-9._-]+@[a-zA-Z]{3,}$/.test(upiId)) {
+        alert('Please enter a valid UPI ID (e.g., yourname@bankname)');
+        return;
+    }
+
+    // Mobile number validation
+    if (!/^\d{10}$/.test(mobileNumber)) {
+        alert('Mobile number must be 10 digits');
+        return;
+    }
+
+    closeUPIPaymentForm();
+    processPaymentSuccess('upi', upiId, eventName, organizer);
+}
+
+window.showQRCodePaymentForm = function(eventName, organizer) {
+    closeTestPaymentDialog();
+
+    const qrFormHTML = `
+        <div id="qr-payment-modal" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        ">
+            <div style="
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                max-width: 400px;
+                width: 90%;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                text-align: center;
+            ">
+                <h2 style="margin: 0 0 20px 0; color: #333;">📲 QR Code Payment</h2>
+                <div style="background: #f0f9ff; border-left: 4px solid #059669; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                    <p style="margin: 0; font-size: 14px; color: #1e40af;"><strong>Amount:</strong> ₹150</p>
+                </div>
+                <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Scan this QR code with any payment app (GPay, PhonePe, Paytm)</p>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=athleticsplatform@okhdfcbank&pn=Athletics%20Event%20Platform&am=150&tn=Event%20Creation%20Fee" alt="QR Code" style="max-width: 100%; border-radius: 8px;">
+                </div>
+                <p style="color: #666; margin-bottom: 20px; font-size: 13px;">UPI: athleticsplatform@okhdfcbank</p>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="processQRPaymentSuccess('${eventName.replace(/'/g, "\\'")}', '${organizer.replace(/'/g, "\\'")}')" style="flex: 1; padding: 12px; background: #059669; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">✓ Paid</button>
+                    <button type="button" onclick="closeQRPaymentForm();" style="flex: 1; padding: 12px; background: #e5e7eb; color: #333; border: none; border-radius: 8px; cursor: pointer;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', qrFormHTML);
+}
+
+window.closeQRPaymentForm = function() {
+    const modal = document.getElementById('qr-payment-modal');
+    if (modal) modal.remove();
+}
+
+window.processQRPaymentSuccess = function(eventName, organizer) {
+    closeQRPaymentForm();
+    processPaymentSuccess('qr', 'QR Code', eventName, organizer);
+}
+
+function processPaymentSuccess(method, details, eventName, organizer) {
+    const loadingHTML = `
+        <div id="payment-processing" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        ">
+            <div style="
+                background: white;
+                padding: 40px;
+                border-radius: 12px;
+                text-align: center;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            ">
+                <div style="
+                    width: 50px;
+                    height: 50px;
+                    border: 4px solid #2563eb;
+                    border-top-color: transparent;
+                    border-radius: 50%;
+                    margin: 0 auto 15px;
+                    animation: spin 1s linear infinite;
+                "></div>
+                <p style="margin: 0; color: #666; font-size: 14px;">Processing payment via ${details}...</p>
+            </div>
+            <style>
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            </style>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', loadingHTML);
+
+    // Simulate payment processing delay
+    setTimeout(() => {
+        const processingDiv = document.getElementById('payment-processing');
+        if (processingDiv) processingDiv.remove();
+
+        // Mock payment ID
+        const mockPaymentId = 'pay_test_' + Date.now();
+
+        // Store payment info in localStorage for verification
+        const paymentInfo = {
+            id: mockPaymentId,
+            amount: 15000,
+            method: method,
+            details: details,
+            status: 'success',
+            timestamp: new Date().toISOString()
+        };
+
+        const payments = JSON.parse(localStorage.getItem('payments') || '[]');
+        payments.push(paymentInfo);
+        localStorage.setItem('payments', JSON.stringify(payments));
+
+        // Create event after payment
+        const eventData = {
+            name: eventName,
+            category: document.getElementById('createEventForm').category.value,
+            start_date: document.getElementById('createEventForm').start_date.value,
+            end_date: document.getElementById('createEventForm').end_date.value,
+            start_time: document.getElementById('createEventForm').start_time.value,
+            end_time: document.getElementById('createEventForm').end_time.value,
+            Start_location: document.getElementById('createEventForm').Start_location.value,
+            End_location: document.getElementById('createEventForm').End_location.value,
+            distance: document.getElementById('createEventForm').distance.value,
+            max_participants: document.getElementById('createEventForm').max_participants.value || 0,
+            fee: document.getElementById('createEventForm').fee.value || 0,
+            description: document.getElementById('createEventForm').description.value,
+            image: document.getElementById('createEventForm').image.files[0] || null,
+            organizer: organizer,
+            createdByUsername: localStorage.getItem("currentUser")
+        };
+
+        createEventAfterPayment(eventData, mockPaymentId);
+    }, 2000);
+}
+
+window.processTestPayment = function(method, eventName, organizer) {
+    if (method === 'card') {
+        showCardPaymentForm(eventName, organizer);
+    } else if (method === 'upi') {
+        showUPIPaymentForm(eventName, organizer);
+    } else if (method === 'qr') {
+        showQRCodePaymentForm(eventName, organizer);
+    }
+}
+
+function processRealPayment(eventData) {
+    // Check if Razorpay is loaded
+    if (typeof Razorpay === 'undefined') {
+        alert('Payment gateway is loading. Please try again in a moment.');
+        console.error('Razorpay script not loaded');
+        return;
+    }
+
+    const options = {
+        key: RAZORPAY_CONFIG.key_id,
+        amount: RAZORPAY_CONFIG.payment_amount,
+        currency: RAZORPAY_CONFIG.currency,
+        name: 'Athletics Event Platform',
+        description: 'Event Creation Fee - ₹150',
+        prefill: {
+            name: eventData.organizer || 'Organizer',
+            email: eventData.organizerEmail || 'organizer@athleticsplatform.com',
+            contact: '9999999999'
+        },
+        notes: {
+            event_name: eventData.name,
+            event_category: eventData.category
+        },
+        theme: {
+            color: '#2563eb'
+        },
+        timeout: 60,
+        handler: function(response) {
+            console.log('Payment successful:', response);
+            createEventAfterPayment(eventData, response.razorpay_payment_id);
+        },
+        modal: {
+            ondismiss: function() {
+                console.log('Payment window closed by user');
+                alert('Payment cancelled. Please try again.');
+            }
+        }
+    };
+
+    try {
+        const rzp = new Razorpay(options);
+        rzp.open();
+    } catch (error) {
+        console.error('Error opening Razorpay checkout:', error);
+        alert('Failed to open payment gateway. Error: ' + error.message);
+    }
+}
+
+async function createEventAfterPayment(eventData, paymentId) {
+    try {
+        // ✅ NEW: Capture local data URL as fallback before backend upload
+        let localImageData = '';
+        if (eventData.image instanceof File) {
+            localImageData = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(eventData.image);
+            });
+        }
+
+        // Prepare FormData for backend
+        const formData = new FormData();
+        formData.append('name', eventData.name);
+        formData.append('category', eventData.category);
+        formData.append('start_date', eventData.start_date);
+        formData.append('end_date', eventData.end_date);
+        formData.append('start_time', eventData.start_time);
+        formData.append('end_time', eventData.end_time);
+        formData.append('Start_location', eventData.Start_location);
+        formData.append('End_location', eventData.End_location);
+        formData.append('distance', eventData.distance);
+        formData.append('max_participants', eventData.max_participants);
+        formData.append('fee', eventData.fee);
+        formData.append('description', eventData.description);
+        formData.append('organizer', eventData.organizer);
+        formData.append('created_by_username', eventData.createdByUsername);
+        formData.append('payment_id', paymentId);
+
+        if (eventData.image) {
+            formData.append('image', eventData.image);
+        }
+
+        // Try to send to backend API first (image will be stored on server)
+        let imageUrl = '';
+        let backendEventId = null;
+
+        try {
+            const response = await fetch(getAPIEndpoint('/api/create-event/'), {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            console.log('Backend response:', data);
+
+            if (data.status === 'success' && data.event_id) {
+                backendEventId = data.event_id;
+                // Use the actual image URL returned from backend
+                if (data.imageUrl) {
+                    imageUrl = data.imageUrl;
+                    console.log('✅ Image saved on server:', imageUrl);
+                }
+            }
+        } catch (err) {
+            console.warn('Backend API error:', err.message);
+            // Continue with localStorage fallback
+        }
+
+        // Create event object for localStorage with proper image URL
+        const newEvent = {
+            id: backendEventId || Date.now(),
+            name: eventData.name,
+            title: eventData.name,
+            category: eventData.category,
+            date: eventData.start_date,
+            start_date: eventData.start_date,
+            end_date: eventData.end_date,
+            start_time: eventData.start_time,
+            end_time: eventData.end_time,
+            distance: eventData.distance,
+            max_participants: eventData.max_participants,
+            fee: eventData.fee,
+            description: eventData.description,
+            organizer: eventData.organizer,
+            createdByUsername: eventData.createdByUsername,
+            createdBy: eventData.createdByUsername,
+            status: 'pending',
+            payment_id: paymentId,
+            imageUrl: imageUrl,  // Store SERVER URL instead of local file
+            image: imageUrl || '',
+            localImageData: localImageData, // ✅ Fallback if server image fails
+            registrations: 0,
+            participants: 0
+        };
+
+        // Save to localStorage
+        const events = JSON.parse(localStorage.getItem("events") || "[]");
+        events.push(newEvent);
+        localStorage.setItem("events", JSON.stringify(events));
+        console.log('Event saved to localStorage with image URL:', newEvent);
+
+        // Show success message with approval workflow info
+        const successMsg = `
+✅ Payment Successful!
+
+Your event has been created successfully and is now pending approval.
+
+📋 What happens next:
+• Your event has been submitted to the Super Admin panel for review
+• The Super Admin will review your event details and approve/reject it
+• You will be notified once your event is approved
+• Until approval, your event will not be visible to athletes
+
+Event Name: ${eventData.name}
+Payment ID: ${paymentId}
+Status: Pending Approval
+
+Thank you for using Athletics Event Platform!
+        `;
+
+        alert(successMsg);
+        window.location.href = 'thank_you.html';
+
+    } catch (error) {
+        console.error('Error creating event after payment:', error);
+        alert('Event creation failed. Please contact support.');
+    }
+}
+
+async function updateEvent(eventId, form, userData, currentUser) {
+    try {
+        const organizerName = userData?.organizationName || userData?.name || currentUser;
+        
+        const updatedEvent = {
+            id: parseInt(eventId),
+            name: form.name.value,
+            title: form.name.value,
+            category: form.category.value,
+            start_date: form.start_date.value,
+            end_date: form.end_date.value,
+            start_time: form.start_time.value,
+            end_time: form.end_time.value,
+            Start_location: form.Start_location.value,
+            End_location: form.End_location.value,
+            distance: form.distance.value,
+            max_participants: parseInt(form.max_participants.value) || 0,
+            fee: parseFloat(form.fee.value) || 0,
+            description: form.description.value,
+            organizer: organizerName,
+            createdByUsername: currentUser,
+            createdBy: currentUser,
+            updatedAt: new Date().toISOString()
+        };
+
+        // Handle image if new one uploaded
+        if (form.image.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                updatedEvent.imageUrl = e.target.result;
+                updatedEvent.image = e.target.result;
+                saveUpdatedEvent(eventId, updatedEvent);
+            };
+            reader.readAsDataURL(form.image.files[0]);
+        } else {
+            // Keep existing image
+            const events = JSON.parse(localStorage.getItem("events") || "[]");
+            const existingEvent = events.find(e => String(e.id) === String(eventId));
+            if (existingEvent) {
+                updatedEvent.imageUrl = existingEvent.imageUrl || existingEvent.image || '';
+                updatedEvent.image = existingEvent.image || '';
+            }
+            saveUpdatedEvent(eventId, updatedEvent);
+        }
+    } catch (error) {
+        console.error('Error updating event:', error);
+        alert('Failed to update event. Please try again.');
+    }
+}
+
+function saveUpdatedEvent(eventId, updatedEvent) {
+    const events = JSON.parse(localStorage.getItem("events") || "[]");
+    const index = events.findIndex(e => String(e.id) === String(eventId));
+    
+    if (index !== -1) {
+        events[index] = { ...events[index], ...updatedEvent };
+        localStorage.setItem("events", JSON.stringify(events));
+        
+        alert('✅ Event updated successfully!');
+        window.location.href = 'index.html';
+    } else {
+        alert('Event not found.');
+    }
+}
+</script>
+
+
+</body>
+</html>

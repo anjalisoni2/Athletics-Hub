@@ -1,0 +1,23 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Details</title>
+  <link rel="stylesheet" href="styles/event-details.css">
+
+  <meta charset="UTF-8" />
+</head>
+<body style="background:#f3f4f6;margin:0">
+  <div id="app"></div>
+
+  <script type="module">
+    import { renderEventDetails } from "./js/event-details.js";
+
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get("id");
+
+    renderEventDetails(document.getElementById("app"), eventId);
+  </script>
+</body>
+</html>
